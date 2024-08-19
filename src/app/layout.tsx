@@ -4,6 +4,7 @@ import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
 
 import { cn } from "@/lib/utils";
+import Providers from "./providers";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -23,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="dark">
       <head />
       <body
         className={cn(
@@ -31,7 +32,7 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        {children}
+        <Providers children={children} />
       </body>
     </html>
   );
