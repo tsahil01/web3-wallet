@@ -32,7 +32,9 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <Providers children={children} />
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );
