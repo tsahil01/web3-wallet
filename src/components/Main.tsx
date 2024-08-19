@@ -3,28 +3,31 @@ import { useRecoilState } from "recoil";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { useState } from "react";
-import nacl from "tweetnacl";
 import { generateMnemonic, mnemonicToSeedSync } from "bip39";
 import { derivePath } from "ed25519-hd-key";
 import { Keypair } from "@solana/web3.js";
 import bs58 from "bs58";
 import { ethers } from "ethers";
+import { solDerivePath } from "@/config/solana/config";
+import { ethDerivePath } from "@/config/eth/config";
+import { WalletInterface, walletsAtom } from "@/atom/walletsAtom";
 
 export default function MainComponent() {
   const [seedPhase, setSeedPhase] = useRecoilState(seedPhaseAtom);
   const [showSeedPhase, setShowSeedPhase] = useState<boolean>(false);
   const [checked, setChecked] = useState(true);
   const [showWallets, setShowWallets] = useState<boolean>(false);
+  const [wallets, setWallets] = useRecoilState(walletsAtom);
   return (
     <>
-      <div className="flex gap-7 h-96 justify-center flex-col p-2">
+      <div className="flex gap-7 h-96 justify-normal flex-col p-2">
         <div className="flex flex-col gap-1 mx-auto w-full">
           <h1 className="text-3xl font-bold mx-auto ">
             {seedPhase.length
               ? !showWallets
                 ? "Your Seed Phase"
                 : "Your Wallets"
-              : "Welcome to Pouch"}
+              : "Welcome to Wallet Generator"}
           </h1>
           <p className="mx-auto text-sm dark:text-slate-500 ">
             {seedPhase.length && !showWallets
@@ -40,7 +43,7 @@ export default function MainComponent() {
               {seedPhase.map((word, index) => (
                 <div
                   key={index}
-                  className="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-100 px-2 py-1 rounded-md"
+                  className="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2 rounded-md text-lg"
                 >
                   {word}
                 </div>
@@ -65,10 +68,10 @@ export default function MainComponent() {
         )}
 
         {!showWallets && (
-          <div className="mx-auto mt-7">
+          <div className="mx-auto mt-2">
             {seedPhase.length == 0 && (
               <Button
-                className="w-[300px]"
+                className="w-[200px] font-bold"
                 onClick={async () => {
                   const seedString = await createSeedPhase();
                   setSeedPhase(seedString);
@@ -96,8 +99,15 @@ export default function MainComponent() {
           <>
             <div className="mx-auto mt-2">
               <Button
-                className="w-[200px]"
-                onClick={async () => await generateWallet(seedPhase.join(" "))}
+                className=""
+                onClick={async () => {
+                  let res: WalletInterface = await generateWallet(
+                    seedPhase.join(" "),
+                    wallets.length + 1
+                  );
+                  console.log(res);
+                  setWallets([...wallets, res]);
+                }}
               >
                 Generate a Wallet
               </Button>
@@ -114,12 +124,11 @@ async function createSeedPhase() {
   return mnemonic.split(" ");
 }
 
-async function generateWallet(seed: string) {
+async function generateWallet(seed: string, account: number) {
   const seedBuffer = mnemonicToSeedSync(seed);
-  const i = 1;
-  const msg = "hello";
-  const solanaPath = `m/44'/501'/${i}'/0'`;
-  const ethPath = `m/44'/60'/${i}'/0'`;
+
+  const solanaPath = solDerivePath(account);
+  const ethPath = ethDerivePath(account);
 
   const solanaDerivedSeed = derivePath(
     solanaPath,
@@ -130,24 +139,27 @@ async function generateWallet(seed: string) {
   const solanaPublicKey = solanaKeypair.publicKey.toBase58();
   const solanaSecretKey = bs58.encode(solanaKeypair.secretKey);
 
-  const message = new TextEncoder().encode(msg);
-  const signature = nacl.sign.detached(message, solanaKeypair.secretKey);
-  const result = nacl.sign.detached.verify(
-    message,
-    signature,
-    solanaKeypair.publicKey.toBytes()
-  );
-  console.log(result);
-
   const ethDerivedSeed = derivePath(ethPath, seedBuffer.toString("hex")).key;
+
   const ethWallet = new ethers.Wallet(ethDerivedSeed.toString("hex"));
 
   const ethPublicKey = ethWallet.address;
   const ethPrivateKey = ethWallet.privateKey;
 
-  const sig = await ethWallet.signMessage(message);
-  const recoveredAddress = ethers.verifyMessage(message, sig);
-
-console.log("Recovered Address:", recoveredAddress);
-console.log("Signature is valid:", recoveredAddress === ethPublicKey);
+  return {
+    derivePath: {
+      solana: solanaPath,
+      eth: ethPath,
+    },
+    keys: {
+      solana: {
+        publicKey: solanaPublicKey,
+        secretKey: solanaSecretKey,
+      },
+      eth: {
+        publicKey: ethPublicKey,
+        privateKey: ethPrivateKey,
+      },
+    },
+  };
 }
