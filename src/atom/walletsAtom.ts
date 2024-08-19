@@ -5,7 +5,7 @@ export interface WalletInterface {
         solana: string;
         eth: string;
     };
-    keys: {
+    keysValue: {
         solana: {
             publicKey: string;
             secretKey: string;

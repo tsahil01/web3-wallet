@@ -11,6 +11,7 @@ import { ethers } from "ethers";
 import { solDerivePath } from "@/config/solana/config";
 import { ethDerivePath } from "@/config/eth/config";
 import { WalletInterface, walletsAtom } from "@/atom/walletsAtom";
+import { WalletCardComponent } from "./WalletCard";
 
 export default function MainComponent() {
   const [seedPhase, setSeedPhase] = useRecoilState(seedPhaseAtom);
@@ -20,52 +21,22 @@ export default function MainComponent() {
   const [wallets, setWallets] = useRecoilState(walletsAtom);
   return (
     <>
-      <div className="flex gap-7 h-96 justify-normal flex-col p-2">
+      <div className="flex gap-7 mb-8 justify-normal">
         <div className="flex flex-col gap-1 mx-auto w-full">
-          <h1 className="text-3xl font-bold mx-auto ">
+          <h1 className="text-3xl font-bold ">
             {seedPhase.length
               ? !showWallets
                 ? "Your Seed Phase"
                 : "Your Wallets"
               : "Welcome to Wallet Generator"}
           </h1>
-          <p className="mx-auto text-sm dark:text-slate-500 ">
+          <p className=" text-sm dark:text-slate-500 ">
             {seedPhase.length && !showWallets
               ? "Keep your seed phase save and secure!"
               : (!showWallets && "Let's get Started!") ||
-                "Your wallets are ready!"}
+                ""}
           </p>
         </div>
-
-        {seedPhase.length > 0 && showSeedPhase && (
-          <div className="flex flex-col gap-2 mx-auto">
-            <div className="grid grid-cols-3 gap-2 mx-auto">
-              {seedPhase.map((word, index) => (
-                <div
-                  key={index}
-                  className="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2 rounded-md text-lg"
-                >
-                  {word}
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center my-2 space-x-2">
-              <Checkbox
-                onCheckedChange={(che: boolean) => {
-                  // console.log(che);
-                  setChecked(!che);
-                }}
-                id="terms"
-              />
-              <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                I have copied my seed phrase and stored it in a safe place.
-              </label>
-            </div>
-          </div>
-        )}
 
         {!showWallets && (
           <div className="mx-auto mt-2">
@@ -115,6 +86,50 @@ export default function MainComponent() {
           </>
         )}
       </div>
+      <div className="mx-auto flex">
+
+      {seedPhase.length > 0 && showSeedPhase && (
+          <div className="flex flex-col gap-2 mx-auto">
+            <div className="grid grid-cols-3 gap-2 mx-auto">
+              {seedPhase.map((word, index) => (
+                <div
+                  key={index}
+                  className="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2 rounded-md text-lg"
+                >
+                  {word}
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center my-2 space-x-2">
+              <Checkbox
+                onCheckedChange={(che: boolean) => {
+                  // console.log(che);
+                  setChecked(!che);
+                }}
+                id="terms"
+              />
+              <label
+                htmlFor="terms"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                I have copied my seed phrase and stored it in a safe place.
+              </label>
+            </div>
+          </div>
+        )}
+
+        {showWallets && wallets.length > 0 && (
+          <>
+          <div className="grid md:grid-cols-2 gap-5 my-3 mx-auto">
+            {wallets.map((wallet, index) => (
+              console.log("Wallets: ",wallet),
+              <WalletCardComponent wallet={wallet} />
+            ))}
+          </div>
+          </>
+        )}
+
+      </div>
     </>
   );
 }
@@ -151,7 +166,7 @@ async function generateWallet(seed: string, account: number) {
       solana: solanaPath,
       eth: ethPath,
     },
-    keys: {
+    keysValue: {
       solana: {
         publicKey: solanaPublicKey,
         secretKey: solanaSecretKey,
