@@ -3,7 +3,7 @@ export default function Header() {
     <>
       <section className="flex flex-col items-start gap-2 px-4 py-8 md:py-12 md:pb-8 lg:py-12 lg:pb-10">
         <h1 className="text-4xl font-bold leading-tight tracking-tighter md:text-7xl">
-          Pouch
+          Pouch.
         </h1>
         <p className="max-w-2xl text-lg font-light text-foreground">
           An open-source HD wallet generator for Sol and Eth.

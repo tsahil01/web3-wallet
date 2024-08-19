@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <div className="p-2 mt-7">
       <div className="container flex flex-col gap-4">
-        <div className="flex justify-between my-auto align-middle">
+        <div className="flex justify-between my-auto align-middle border-b-2 ">
           <Header />
           {seedPhase.length > 0 && (
             <SeedPhaseComponent seedPhase={seedPhase} />

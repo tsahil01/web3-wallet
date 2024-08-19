@@ -22,7 +22,7 @@ export default function MainComponent() {
   return (
     <>
       <div className="flex gap-7 mb-8 justify-normal">
-        <div className="flex flex-col gap-1 mx-auto w-full">
+        <div className="flex flex-col gap-1 px-4 mx-auto w-full">
           <h1 className="text-3xl font-bold ">
             {seedPhase.length
               ? !showWallets
