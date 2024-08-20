@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react"
 
 import { cn } from "@/lib/utils";
 import Providers from "./providers";
@@ -25,6 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className="">
+      <Analytics/>
       <head />
       <body
         className={cn(
