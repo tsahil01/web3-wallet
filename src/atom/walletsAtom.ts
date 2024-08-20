@@ -1,6 +1,7 @@
 import { atom } from "recoil";
 
 export interface WalletInterface {
+    walletNumber: number;
     derivePath: {
         solana: string;
         eth: string;

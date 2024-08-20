@@ -12,6 +12,8 @@ import { solDerivePath } from "@/config/solana/config";
 import { ethDerivePath } from "@/config/eth/config";
 import { WalletInterface, walletsAtom } from "@/atom/walletsAtom";
 import { WalletCardComponent } from "./WalletCard";
+import { pinAtom } from "@/atom/pinAtom";
+import SetPinComponent from "./PinComponent";
 
 export default function MainComponent() {
   const [seedPhase, setSeedPhase] = useRecoilState(seedPhaseAtom);
@@ -19,18 +21,19 @@ export default function MainComponent() {
   const [checked, setChecked] = useState(true);
   const [showWallets, setShowWallets] = useState<boolean>(false);
   const [wallets, setWallets] = useRecoilState(walletsAtom);
+  const [pin, setPin] = useRecoilState(pinAtom);
   return (
     <>
-      <div className="flex gap-7 mb-8 justify-normal">
+      <div className="flex md:flex-row flex-col md:gap-7 gap-4 mb-8 justify-normal">
         <div className="flex flex-col gap-1 px-4 mx-auto w-full">
-          <h1 className="text-3xl font-bold ">
+          <h1 className="md:text-3xl text-2xl font-bold mx-auto md:m-0">
             {seedPhase.length
               ? !showWallets
                 ? "Your Seed Phase"
                 : "Your Wallets"
               : "Welcome to Wallet Generator"}
           </h1>
-          <p className=" text-sm dark:text-slate-500 ">
+          <p className=" md:text-sm text-xs dark:text-slate-500 mx-auto md:m-0">
             {seedPhase.length && !showWallets
               ? "Keep your seed phase save and secure!"
               : (!showWallets && "Let's get Started!") ||
@@ -40,9 +43,9 @@ export default function MainComponent() {
 
         {!showWallets && (
           <div className="mx-auto mt-2">
-            {seedPhase.length == 0 && (
+            {seedPhase.length == 0 && pin.length > 0 && (
               <Button
-                className="w-[200px] font-bold"
+                className="md:w-[200px] font-bold"
                 onClick={async () => {
                   const seedString = await createSeedPhase();
                   setSeedPhase(seedString);
@@ -52,9 +55,12 @@ export default function MainComponent() {
                 Create Seed Phase
               </Button>
             )}
+            {seedPhase.length == 0 && pin.length == 0 && (
+              <SetPinComponent />
+            )}
             {seedPhase.length > 0 && (
               <Button
-                className="w-[100px]"
+                className="md:w-[100px]"
                 disabled={checked}
                 onClick={() => {
                   setShowWallets(true);
@@ -120,7 +126,7 @@ export default function MainComponent() {
 
         {showWallets && wallets.length > 0 && (
           <>
-          <div className="grid md:grid-cols-2 gap-5 my-3 mx-auto">
+          <div className="grid md:grid-cols-2 md:gap-5 gap-3 my-3 mx-auto">
             {wallets.map((wallet, index) => (
               console.log("Wallets: ",wallet),
               <WalletCardComponent wallet={wallet} />
@@ -162,6 +168,7 @@ async function generateWallet(seed: string, account: number) {
   const ethPrivateKey = ethWallet.privateKey;
 
   return {
+    walletNumber: account,
     derivePath: {
       solana: solanaPath,
       eth: ethPath,

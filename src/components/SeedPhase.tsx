@@ -16,7 +16,7 @@ export default function SeedPhaseComponent({
   return (
     <>
       <AlertDialog>
-        <AlertDialogTrigger className="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2 rounded-md my-auto">
+        <AlertDialogTrigger className="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-100 md:px-4 px-2 md:py-2 py-1 rounded-md my-auto md:text-sm text-xs">
           My Seed Phase
         </AlertDialogTrigger>
         <AlertDialogContent>
