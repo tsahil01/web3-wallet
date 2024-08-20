@@ -39,7 +39,7 @@ export function WalletCardComponent({ wallet }: WalletCardProps) {
             <div className="w-full justify-between gap-4">
               <div className="my-2 w-full">
                 <div className="text-xs mb-1">Public Key:</div>
-                <div className="flex gap-2 w-96">
+                <div className="flex gap-2 md:max-w-96 max-w-64">
                   <p className="border p-2 rounded-md overflow-hidden text-ellipsis truncate  md:max-w-96">
                     {wallet.keysValue.solana.publicKey}
                   </p>
@@ -48,7 +48,7 @@ export function WalletCardComponent({ wallet }: WalletCardProps) {
               </div>
               <div className="my-2 w-full">
                 <div className="text-xs mb-1">Private Key:</div>
-                <div className="flex gap-2 w-96">
+                <div className="flex gap-2 md:max-w-96 max-w-64">
                   <p className="flex border px-2 gap-2 rounded-md w-full">
                     <Input
                       type={showSolanaPrivateKey ? "text" : "password"}
@@ -83,16 +83,16 @@ export function WalletCardComponent({ wallet }: WalletCardProps) {
             <div className="w-full justify-between gap-4">
               <div className="my-2 w-full">
                 <div className="text-xs mb-1">Public Key:</div>
-                <div className="flex gap-2 w-96">
+                <div className="flex gap-2 md:max-w-96 max-w-64">
                   <p className="border p-2 rounded-md overflow-hidden text-ellipsis truncate  md:max-w-96">
                     {wallet.keysValue.eth.publicKey}
                   </p>
-                  <Copy className="my-auto" />
+                  <Copy className="my-auto w-10" />
                 </div>
               </div>
               <div className="my-2 w-full">
                 <div className="text-xs mb-1">Private Key:</div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 md:max-w-96 max-w-64">
                   <p className="flex border px-2 gap-2 rounded-md w-full">
                     <Input
                       type={showEthPrivateKey ? "text" : "password"}
