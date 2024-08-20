@@ -100,7 +100,7 @@ export default function MainComponent() {
               {seedPhase.map((word, index) => (
                 <div
                   key={index}
-                  className="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2 rounded-md text-lg"
+                  className="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-100 md:px-4 md:py-2 px-2 py-2 rounded-md md:text-lg text-sm"
                 >
                   {word}
                 </div>

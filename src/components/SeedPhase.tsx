@@ -23,11 +23,11 @@ export default function SeedPhaseComponent({
           <AlertDialogHeader>
             <AlertDialogTitle>Seed Phase</AlertDialogTitle>
             <AlertDialogDescription>
-              <div className="grid grid-cols-4 gap-2 mx-auto">
+              <div className="grid md:grid-cols-4 grid-cols-3 gap-2 mx-auto">
                 {seedPhase.map((word, index) => (
                   <div
                     key={index}
-                    className="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2 rounded-md text-lg"
+                    className="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-100 md:px-4 px-2 md:py-2 py-2 rounded-md my-auto md:text-sm text-sm"
                   >
                     {word}
                   </div>
