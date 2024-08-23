@@ -39,8 +39,8 @@ export function WalletCardComponent({ wallet }: WalletCardProps) {
             <div className="w-full justify-between gap-4">
               <div className="my-2 w-full">
                 <div className="text-xs mb-1">Public Key:</div>
-                <div className="flex gap-2 md:max-w-96 max-w-64">
-                  <p className="border p-2 rounded-md overflow-hidden text-ellipsis truncate  md:max-w-96">
+                <div className="flex gap-2">
+                  <p className="border p-2 rounded-md overflow-hidden text-ellipsis truncate  md:max-w-96 max-w-64">
                     {wallet.keysValue.solana.publicKey}
                   </p>
                   <Copy className="my-auto" />
@@ -48,8 +48,8 @@ export function WalletCardComponent({ wallet }: WalletCardProps) {
               </div>
               <div className="my-2 w-full">
                 <div className="text-xs mb-1">Private Key:</div>
-                <div className="flex gap-2 md:max-w-96 max-w-64">
-                  <p className="flex border px-2 gap-2 rounded-md w-full">
+                <div className="flex gap-2">
+                  <p className="flex border px-2 gap-2 rounded-md md:max-w-96 max-w-64">
                     <Input
                       type={showSolanaPrivateKey ? "text" : "password"}
                       value={wallet.keysValue.solana.secretKey}
@@ -83,8 +83,8 @@ export function WalletCardComponent({ wallet }: WalletCardProps) {
             <div className="w-full justify-between gap-4">
               <div className="my-2 w-full">
                 <div className="text-xs mb-1">Public Key:</div>
-                <div className="flex gap-2 md:max-w-96 max-w-64">
-                  <p className="border p-2 rounded-md overflow-hidden text-ellipsis truncate  md:max-w-96">
+                <div className="flex gap-2">
+                  <p className="border p-2 rounded-md overflow-hidden text-ellipsis truncate md:max-w-96 max-w-64">
                     {wallet.keysValue.eth.publicKey}
                   </p>
                   <Copy className="my-auto w-10" />
@@ -92,8 +92,8 @@ export function WalletCardComponent({ wallet }: WalletCardProps) {
               </div>
               <div className="my-2 w-full">
                 <div className="text-xs mb-1">Private Key:</div>
-                <div className="flex gap-2 md:max-w-96 max-w-64">
-                  <p className="flex border px-2 gap-2 rounded-md w-full">
+                <div className="flex gap-2">
+                  <p className="flex border px-2 gap-2 rounded-md md:max-w-96 max-w-64">
                     <Input
                       type={showEthPrivateKey ? "text" : "password"}
                       value={wallet.keysValue.eth.privateKey}
