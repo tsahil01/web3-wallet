@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/react"
 
 import { cn } from "@/lib/utils";
 import Providers from "./providers";
+import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -37,6 +38,7 @@ export default function RootLayout({
         <Providers>
           {children}
         </Providers>
+        <Toaster />
       </body>
     </html>
   );
