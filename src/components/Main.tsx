@@ -3,17 +3,11 @@ import { useRecoilState } from "recoil";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { useState } from "react";
-import { generateMnemonic, mnemonicToSeedSync } from "bip39";
-import { derivePath } from "ed25519-hd-key";
-import { Keypair } from "@solana/web3.js";
-import bs58 from "bs58";
-import { ethers } from "ethers";
-import { solDerivePath } from "@/config/solana/config";
-import { ethDerivePath } from "@/config/eth/config";
 import { WalletInterface, walletsAtom } from "@/atom/walletsAtom";
 import { WalletCardComponent } from "./WalletCard";
 import { pinAtom } from "@/atom/pinAtom";
 import SetPinComponent from "./PinComponent";
+import { createSeedPhase, generateWallet } from "@/config/mainConfig";
 
 export default function MainComponent() {
   const [seedPhase, setSeedPhase] = useRecoilState(seedPhaseAtom);
@@ -140,48 +134,3 @@ export default function MainComponent() {
   );
 }
 
-async function createSeedPhase() {
-  const mnemonic = generateMnemonic();
-  return mnemonic.split(" ");
-}
-
-async function generateWallet(seed: string, account: number) {
-  const seedBuffer = mnemonicToSeedSync(seed);
-
-  const solanaPath = solDerivePath(account);
-  const ethPath = ethDerivePath(account);
-
-  const solanaDerivedSeed = derivePath(
-    solanaPath,
-    seedBuffer.toString("hex")
-  ).key;
-
-  const solanaKeypair = Keypair.fromSeed(solanaDerivedSeed);
-  const solanaPublicKey = solanaKeypair.publicKey.toBase58();
-  const solanaSecretKey = bs58.encode(solanaKeypair.secretKey);
-
-  const ethDerivedSeed = derivePath(ethPath, seedBuffer.toString("hex")).key;
-
-  const ethWallet = new ethers.Wallet(ethDerivedSeed.toString("hex"));
-
-  const ethPublicKey = ethWallet.address;
-  const ethPrivateKey = ethWallet.privateKey;
-
-  return {
-    walletNumber: account,
-    derivePath: {
-      solana: solanaPath,
-      eth: ethPath,
-    },
-    keysValue: {
-      solana: {
-        publicKey: solanaPublicKey,
-        secretKey: solanaSecretKey,
-      },
-      eth: {
-        publicKey: ethPublicKey,
-        privateKey: ethPrivateKey,
-      },
-    },
-  };
-}
