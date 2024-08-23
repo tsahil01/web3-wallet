@@ -43,7 +43,7 @@ export function WalletCardComponent({ wallet }: WalletCardProps) {
               <div className="my-2 w-full">
                 <div className="text-xs mb-1">Public Key:</div>
                 <div className="flex gap-2">
-                  <p className="border p-2 rounded-md overflow-hidden text-ellipsis truncate  md:max-w-96 max-w-64">
+                  <p className="border p-2 rounded-md overflow-hidden text-ellipsis truncate  md:max-w-96 max-w-52">
                     {wallet.keysValue.solana.publicKey}
                   </p>
                   <Button variant={"outline"}>
@@ -66,7 +66,7 @@ export function WalletCardComponent({ wallet }: WalletCardProps) {
               <div className="my-2 w-full">
                 <div className="text-xs mb-1">Private Key:</div>
                 <div className="flex gap-2">
-                  <div className="flex border gap-1 p-2  rounded-md overflow-hidden md:max-w-96 max-w-64">
+                  <div className="flex border gap-1 p-2  rounded-md overflow-hidden md:max-w-96 max-w-52">
                     <p className="text-ellipsis truncate">
                       {showSolanaPrivateKey
                         ? wallet.keysValue.solana.secretKey
@@ -113,7 +113,7 @@ export function WalletCardComponent({ wallet }: WalletCardProps) {
               <div className="my-2 w-full">
                 <div className="text-xs mb-1">Public Key:</div>
                 <div className="flex gap-2">
-                  <p className="border p-2 rounded-md overflow-hidden text-ellipsis truncate md:max-w-96 max-w-64">
+                  <p className="border p-2 rounded-md overflow-hidden text-ellipsis truncate md:max-w-96 max-w-52">
                     {wallet.keysValue.eth.publicKey}
                   </p>
                   <Button variant={"outline"}>
@@ -137,7 +137,7 @@ export function WalletCardComponent({ wallet }: WalletCardProps) {
               <div className="my-2 w-full">
                 <div className="text-xs mb-1">Private Key:</div>
                 <div className="flex gap-2">
-                  <div className="flex border gap-1 p-2  rounded-md overflow-hidden md:max-w-96 max-w-64">
+                  <div className="flex border gap-1 p-2  rounded-md overflow-hidden md:max-w-96 max-w-52">
                     <p className="text-ellipsis truncate">
                       {showEthPrivateKey
                         ? wallet.keysValue.eth.privateKey
