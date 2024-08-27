@@ -8,6 +8,7 @@ import { WalletCardComponent } from "./WalletCard";
 import { pinAtom } from "@/atom/pinAtom";
 import SetPinComponent from "./PinComponent";
 import { createSeedPhase, generateWallet } from "@/config/mainConfig";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function MainComponent() {
   const [seedPhase, setSeedPhase] = useRecoilState(seedPhaseAtom);
@@ -16,6 +17,7 @@ export default function MainComponent() {
   const [showWallets, setShowWallets] = useState<boolean>(false);
   const [wallets, setWallets] = useRecoilState(walletsAtom);
   const [pin, setPin] = useRecoilState(pinAtom);
+  const { toast } = useToast();
   return (
     <>
       <div className="flex md:flex-row flex-col md:gap-7 gap-4 mb-8 justify-normal">
@@ -30,8 +32,7 @@ export default function MainComponent() {
           <p className=" md:text-sm text-xs dark:text-slate-500 mx-auto md:m-0">
             {seedPhase.length && !showWallets
               ? "Keep your seed phase save and secure!"
-              : (!showWallets && "Let's get Started!") ||
-                ""}
+              : (!showWallets && "Let's get Started!") || ""}
           </p>
         </div>
 
@@ -49,9 +50,7 @@ export default function MainComponent() {
                 Create Seed Phase
               </Button>
             )}
-            {seedPhase.length == 0 && pin.length == 0 && (
-              <SetPinComponent />
-            )}
+            {seedPhase.length == 0 && pin.length == 0 && <SetPinComponent />}
             {seedPhase.length > 0 && (
               <Button
                 className="md:w-[100px]"
@@ -87,10 +86,21 @@ export default function MainComponent() {
         )}
       </div>
       <div className="mx-auto flex">
-
-      {seedPhase.length > 0 && showSeedPhase && (
+        {seedPhase.length > 0 && showSeedPhase && (
           <div className="flex flex-col gap-2 mx-auto">
-            <div className="grid grid-cols-3 gap-2 mx-auto">
+            <div className="text-xs mx-auto">
+              Click on any word to copy the seed phrase.
+            </div>
+            <div
+              className="grid grid-cols-3 gap-2 mx-auto hover:cursor-pointer"
+              onClick={() => {
+                navigator.clipboard.writeText(seedPhase.join(" "));
+                toast({
+                  title: "Copied!",
+                  description: "Seed Phrase copied to clipboard",
+                });
+              }}
+            >
               {seedPhase.map((word, index) => (
                 <div
                   key={index}
@@ -100,6 +110,7 @@ export default function MainComponent() {
                 </div>
               ))}
             </div>
+
             <div className="flex items-center my-2 space-x-2">
               <Checkbox
                 onCheckedChange={(che: boolean) => {
@@ -120,17 +131,17 @@ export default function MainComponent() {
 
         {showWallets && wallets.length > 0 && (
           <>
-          <div className="grid md:grid-cols-2 md:gap-5 gap-3 my-3 mx-auto">
-            {wallets.map((wallet, index) => (
-              console.log("Wallets: ",wallet),
-              <WalletCardComponent wallet={wallet} />
-            ))}
-          </div>
+            <div className="grid md:grid-cols-2 md:gap-5 gap-3 my-3 mx-auto">
+              {wallets.map(
+                (wallet, index) => (
+                  console.log("Wallets: ", wallet),
+                  (<WalletCardComponent wallet={wallet} />)
+                )
+              )}
+            </div>
           </>
         )}
-
       </div>
     </>
   );
 }
-
