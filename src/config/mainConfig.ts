@@ -8,8 +8,8 @@ import { ethers } from "ethers";
 
 // The function createSeedPhase is used to generate a seed phrase.
 export async function createSeedPhase() {
-    const mnemonic = generateMnemonic();
-    return mnemonic.split(" ");
+  const mnemonic = generateMnemonic();
+  return mnemonic.split(" ");
 }
 
 // The function generateWallet is used to generate a wallet for a given seed and account number.
@@ -18,42 +18,42 @@ export async function createSeedPhase() {
 // The account is the number of the wallet to generate.
 
 export async function generateWallet(seed: string, account: number) {
-    const seedBuffer = mnemonicToSeedSync(seed);
+  const seedBuffer = mnemonicToSeedSync(seed);
 
-    const solanaPath = solDerivePath(account);
-    const ethPath = ethDerivePath(account);
+  const solanaPath = solDerivePath(account - 1);
+  const ethPath = ethDerivePath(account - 1);
 
-    const solanaDerivedSeed = derivePath(
-        solanaPath,
-        seedBuffer.toString("hex")
-    ).key;
+  const solanaDerivedSeed = derivePath(
+    solanaPath,
+    seedBuffer.toString("hex"),
+  ).key;
 
-    const solanaKeypair = Keypair.fromSeed(solanaDerivedSeed);
-    const solanaPublicKey = solanaKeypair.publicKey.toBase58();
-    const solanaSecretKey = bs58.encode(solanaKeypair.secretKey);
+  const solanaKeypair = Keypair.fromSeed(solanaDerivedSeed);
+  const solanaPublicKey = solanaKeypair.publicKey.toBase58();
+  const solanaSecretKey = bs58.encode(solanaKeypair.secretKey);
 
-    const ethDerivedSeed = derivePath(ethPath, seedBuffer.toString("hex")).key;
+  const ethDerivedSeed = derivePath(ethPath, seedBuffer.toString("hex")).key;
 
-    const ethWallet = new ethers.Wallet(ethDerivedSeed.toString("hex"));
+  const ethWallet = new ethers.Wallet(ethDerivedSeed.toString("hex"));
 
-    const ethPublicKey = ethWallet.address;
-    const ethPrivateKey = ethWallet.privateKey;
+  const ethPublicKey = ethWallet.address;
+  const ethPrivateKey = ethWallet.privateKey;
 
-    return {
-        walletNumber: account,
-        derivePath: {
-            solana: solanaPath,
-            eth: ethPath,
-        },
-        keysValue: {
-            solana: {
-                publicKey: solanaPublicKey,
-                secretKey: solanaSecretKey,
-            },
-            eth: {
-                publicKey: ethPublicKey,
-                privateKey: ethPrivateKey,
-            },
-        },
-    };
+  return {
+    walletNumber: account,
+    derivePath: {
+      solana: solanaPath,
+      eth: ethPath,
+    },
+    keysValue: {
+      solana: {
+        publicKey: solanaPublicKey,
+        secretKey: solanaSecretKey,
+      },
+      eth: {
+        publicKey: ethPublicKey,
+        privateKey: ethPrivateKey,
+      },
+    },
+  };
 }

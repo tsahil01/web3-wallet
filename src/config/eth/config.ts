@@ -1,3 +1,3 @@
 export function ethDerivePath(account: number): string {
-  return `m/39'/60'/${account}'/0'`;
+  return `m/44'/60'/${account}'/0'`;
 }
