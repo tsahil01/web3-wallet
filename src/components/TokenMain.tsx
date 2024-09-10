@@ -78,7 +78,7 @@ export default function TokenMainComponent() {
       {activeTab === "userTokens" && (
         <div className="flex flex-col gap-7 px-4">
           <div className="flex flex-col gap-1">
-            <h1 className="md:text-3xl text-2xl font-bold">View User's Solana Token</h1>
+            <h1 className="md:text-3xl text-2xl font-bold">View User&apos;s Solana Token</h1>
             <p className="text-xs dark:text-slate-500 text-gray-400">
               Enter the address to view token information.
             </p>
