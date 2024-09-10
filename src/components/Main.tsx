@@ -18,18 +18,19 @@ export default function MainComponent() {
   const [wallets, setWallets] = useRecoilState(walletsAtom);
   const [pin, setPin] = useRecoilState(pinAtom);
   const { toast } = useToast();
+
   return (
     <>
-      <div className="flex md:flex-row flex-col md:gap-7 gap-4 mb-8 justify-normal">
+      <div className="flex flex-col md:flex-row md:gap-7 gap-4 mb-8 justify-normal">
         <div className="flex flex-col gap-1 px-4 mx-auto w-full">
-          <h1 className="md:text-3xl text-2xl font-bold mx-auto md:m-0">
+          <h1 className="text-2xl md:text-3xl font-bold mx-auto md:mx-0 text-center md:text-left">
             {seedPhase.length
               ? !showWallets
                 ? "Your Seed Phase"
                 : "Your Wallets"
               : "Welcome to Wallet Generator"}
           </h1>
-          <p className=" md:text-sm text-xs dark:text-slate-500 mx-auto md:m-0">
+          <p className="text-xs md:text-sm dark:text-slate-500 mx-auto md:mx-0 text-center md:text-left">
             {seedPhase.length && !showWallets
               ? "Keep your seed phase save and secure!"
               : (!showWallets && "Let's get Started!") || ""}
@@ -38,9 +39,9 @@ export default function MainComponent() {
 
         {!showWallets && (
           <div className="mx-auto mt-2">
-            {seedPhase.length == 0 && pin.length > 0 && (
+            {seedPhase.length === 0 && pin.length > 0 && (
               <Button
-                className="md:w-[200px] font-bold"
+                className="w-full md:w-[200px] font-bold"
                 onClick={async () => {
                   const seedString = await createSeedPhase();
                   setSeedPhase(seedString);
@@ -50,10 +51,10 @@ export default function MainComponent() {
                 Create Seed Phase
               </Button>
             )}
-            {seedPhase.length == 0 && pin.length == 0 && <SetPinComponent />}
+            {seedPhase.length === 0 && pin.length === 0 && <SetPinComponent />}
             {seedPhase.length > 0 && (
               <Button
-                className="md:w-[100px]"
+                className="w-full md:w-[100px]"
                 disabled={checked}
                 onClick={() => {
                   setShowWallets(true);
@@ -65,30 +66,30 @@ export default function MainComponent() {
             )}
           </div>
         )}
+
         {showWallets && seedPhase.length > 0 && (
-          <>
-            <div className="mx-auto mt-2">
-              <Button
-                className=""
-                onClick={async () => {
-                  let res: WalletInterface = await generateWallet(
-                    seedPhase.join(" "),
-                    wallets.length + 1
-                  );
-                  console.log(res);
-                  setWallets([...wallets, res]);
-                }}
-              >
-                Generate a Wallet
-              </Button>
-            </div>
-          </>
+          <div className="mx-auto mt-2">
+            <Button
+              className=""
+              onClick={async () => {
+                let res: WalletInterface = await generateWallet(
+                  seedPhase.join(" "),
+                  wallets.length + 1
+                );
+                console.log(res);
+                setWallets([...wallets, res]);
+              }}
+            >
+              Generate a Wallet
+            </Button>
+          </div>
         )}
       </div>
-      <div className="mx-auto flex">
+
+      <div className="mx-auto flex flex-col items-center">
         {seedPhase.length > 0 && showSeedPhase && (
           <div className="flex flex-col gap-2 mx-auto">
-            <div className="text-xs mx-auto">
+            <div className="text-xs text-center">
               Click on any word to copy the seed phrase.
             </div>
             <div
@@ -104,7 +105,7 @@ export default function MainComponent() {
               {seedPhase.map((word, index) => (
                 <div
                   key={index}
-                  className="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-100 md:px-4 md:py-2 px-2 py-2 rounded-md md:text-lg text-sm"
+                  className="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-100 px-2 py-1 md:px-4 md:py-2 rounded-md text-sm md:text-lg"
                 >
                   {word}
                 </div>
@@ -113,10 +114,7 @@ export default function MainComponent() {
 
             <div className="flex items-center my-2 space-x-2">
               <Checkbox
-                onCheckedChange={(che: boolean) => {
-                  // console.log(che);
-                  setChecked(!che);
-                }}
+                onCheckedChange={(che: boolean) => setChecked(!che)}
                 id="terms"
               />
               <label
@@ -130,16 +128,11 @@ export default function MainComponent() {
         )}
 
         {showWallets && wallets.length > 0 && (
-          <>
-            <div className="grid md:grid-cols-2 md:gap-5 gap-3 my-3 mx-auto">
-              {wallets.map(
-                (wallet, index) => (
-                  console.log("Wallets: ", wallet),
-                  (<WalletCardComponent wallet={wallet} />)
-                )
-              )}
-            </div>
-          </>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5 my-3">
+            {wallets.map((wallet, index) => (
+              <WalletCardComponent wallet={wallet} key={index} />
+            ))}
+          </div>
         )}
       </div>
     </>
