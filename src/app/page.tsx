@@ -83,7 +83,7 @@ export default function Home() {
           <h2 className="text-3xl font-bold mb-4">Ready to Dive In?</h2>
           <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
             Create your first wallet, mint a token, or explore our features.
-            It's all at your fingertips!
+            It&apos;s all at your fingertips!
           </p>
           <div className="flex flex-row gap-3 mx-auto justify-center">
             <Button className="animate-pulse">
