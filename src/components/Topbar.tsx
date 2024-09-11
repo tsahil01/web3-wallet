@@ -1,4 +1,4 @@
-import { ArrowDownToDotIcon, ChevronDown, Coins, ToyBrick, Wallet, WalletMinimal } from "lucide-react";
+import { ArrowDownToDotIcon, ChevronDown, Coins, DropletsIcon, ToyBrick, Wallet, WalletMinimal } from "lucide-react";
 import { ThemeToggle } from "./ThemeSwitch";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
@@ -31,6 +31,17 @@ export default function Topbar() {
           >
             <span className="hidden md:inline">Wallets</span>
             <WalletMinimal />
+          </Button>
+
+          <Separator orientation="vertical" className="h-8 my-auto" />
+
+          <Button
+            variant={"link"}
+            className="flex gap-1"
+            onClick={() => router.push("/airdrop")}
+          >
+            <span className="hidden md:inline">Airdrop SOL</span>
+            <DropletsIcon />
           </Button>
 
           <Separator orientation="vertical" className="h-8 my-auto" />
