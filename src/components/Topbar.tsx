@@ -58,7 +58,7 @@ export default function Topbar() {
           <Separator orientation="vertical" className="h-8 my-auto" />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="link" className="flex gap-2 font-bold">
+              <Button variant="link" className="flex gap-2 font-bold" disabled>
                 {rpc.charAt(0).toUpperCase() + rpc.slice(1)}{" "}
                 <ChevronDown className="h-5 w-5" />
               </Button>

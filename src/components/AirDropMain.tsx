@@ -33,7 +33,7 @@ export default function AirdropMainComponent() {
 
   return (
     <div className="flex flex-col md:gap-7 gap-4 mb-8 justify-normal">
-      <div className="flex gap-2 rounded-lg mx-auto">
+      {/* <div className="flex gap-2 rounded-lg mx-auto">
         <Button
           variant="link"
           onClick={() => setActiveTab("airDrop")}
@@ -42,7 +42,7 @@ export default function AirdropMainComponent() {
           AirDrop SOL
         </Button>
         <Separator orientation="vertical" className="h-8 my-auto" />
-      </div>
+      </div> */}
 
       {activeTab === "airDrop" && (
         <div className="flex flex-col gap-7 px-4">
@@ -66,7 +66,7 @@ export default function AirdropMainComponent() {
                 onClick={sendAirdropToUser}
               >
                 <Coins size={24} />
-                Get Airdrop
+                AirDrop
               </Button>
               {!wallet.publicKey && (
                 <p className="text-sm text-center text-muted-foreground">

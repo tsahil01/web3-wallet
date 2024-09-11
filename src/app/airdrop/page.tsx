@@ -19,8 +19,9 @@ export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    getBalance();
     setIsMounted(true);
-  }, []);
+  }, [wallet]);
 
   if (!isMounted) {
     return null;
@@ -39,8 +40,18 @@ export default function Home() {
       <div className="mt-5 h-full overflow-auto md:container ">
         <div className="flex md:flex-row flex-col justify-between mb-5 gap-5">
           <div className="flex flex-row gap-4 my-auto mx-auto md:mx-0">
-            <WalletMultiButton />
-            <WalletDisconnectButton />
+            <WalletMultiButton
+              style={{
+                margin: "0",
+                padding: "10px",
+              }}
+            />
+            <WalletDisconnectButton
+              style={{
+                margin: "0",
+                padding: "10px",
+              }}
+            />
           </div>{" "}
           {wallet.publicKey && (
             <div className="flex flex-col gap-1 mx-auto md:mx-0">
