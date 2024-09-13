@@ -9,8 +9,13 @@ export default function TokenMainComponent() {
   const [solanaAddress, setSolanaAddress] = useState("");
   const [tokenName, setTokenName] = useState("");
   const [tokenSymbol, setTokenSymbol] = useState("");
+  const [tokenImage, setTokenImage] = useState("");
   const [tokenSupply, setTokenSupply] = useState("");
   const [tokenDetailsAddress, setTokenDetailsAddress] = useState("");
+
+  function CreateToken(tokenName: string, tokenSymbol: string, tokenImage: string, tokenSupply: string) {
+
+  }
 
   return (
     <div className="flex flex-col md:gap-7 gap-4 mb-8 justify-normal">
@@ -48,7 +53,7 @@ export default function TokenMainComponent() {
               Fill in the details below to create your Solana token.
             </p>
           </div>
-          <div className="md:grid md:grid-cols-8 flex flex-col gap-4 mt-3">
+          <div className="md:grid md:grid-cols-6 flex flex-col gap-4 mt-3">
             <Input
               className="md:col-span-3"
               type="text"
@@ -57,20 +62,30 @@ export default function TokenMainComponent() {
               onChange={(e) => setTokenName(e.target.value)}
             />
             <Input
-              className="md:col-span-2"
+              className="md:col-span-3"
               type="text"
               placeholder="Token Symbol"
               value={tokenSymbol}
               onChange={(e) => setTokenSymbol(e.target.value)}
             />
             <Input
-              className="md:col-span-2"
+              className="md:col-span-3"
+              type="text"
+              placeholder="Image URL"
+              value={tokenSymbol}
+              onChange={(e) => setTokenImage(e.target.value)}
+            />
+            <Input
+              className="md:col-span-3"
               type="number"
               placeholder="Supply"
               value={tokenSupply}
               onChange={(e) => setTokenSupply(e.target.value)}
             />
-            <Button className="md:col-span-1">Create Token</Button>
+            <Button className="mx-auto w-full" onClick={()=>{
+              console.log("Creating token");
+              createToken(tokenName, tokenSymbol, tokenImage, tokenSupply);
+            }}>Create Token</Button>
           </div>
         </div>
       )}
