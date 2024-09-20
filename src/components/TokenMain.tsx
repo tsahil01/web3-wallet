@@ -1,8 +1,34 @@
-import { ToyBrick, Wallet } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+
+import {
+  createInitializeMetadataPointerInstruction,
+  createInitializeMint2Instruction,
+  createInitializeMintInstruction,
+  createMint,
+  ExtensionType,
+  getMinimumBalanceForRentExemptMint,
+  getMintLen,
+  LENGTH_SIZE,
+  MINT_SIZE,
+  TOKEN_2022_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+  TYPE_SIZE,
+} from "@solana/spl-token";
+import { Button } from "./ui/button";
+import { Separator } from "./ui/separator";
+import { Input } from "./ui/input";
+import {
+  Keypair,
+  sendAndConfirmTransaction,
+  SystemProgram,
+  Transaction,
+} from "@solana/web3.js";
+import {
+  createInitializeInstruction,
+  pack,
+  TokenMetadata,
+} from "@solana/spl-token-metadata";
 
 export default function TokenMainComponent() {
   const [activeTab, setActiveTab] = useState("userTokens");
@@ -13,8 +39,76 @@ export default function TokenMainComponent() {
   const [tokenSupply, setTokenSupply] = useState("");
   const [tokenDetailsAddress, setTokenDetailsAddress] = useState("");
 
-  function CreateToken(tokenName: string, tokenSymbol: string, tokenImage: string, tokenSupply: string) {
+  const { connection } = useConnection();
+  const wallet = useWallet();
 
+  async function createToken(
+    tokenName: string,
+    tokenSymbol: string,
+    tokenImage: string,
+    tokenSupply: string
+  ) {
+    const mintKeyPair = Keypair.generate();
+
+    const metadata: TokenMetadata = {
+      mint: mintKeyPair.publicKey,
+      name: tokenName,
+      symbol: tokenSymbol,
+      uri: "https://cdn.100xdevs.com/metadata.json",
+      additionalMetadata: [],
+    };
+
+    const minLen = getMintLen([ExtensionType.MetadataPointer]);
+    const metaDataLen = TYPE_SIZE * LENGTH_SIZE * pack(metadata).length;
+
+    const lamports = await connection.getMinimumBalanceForRentExemption(
+      minLen + metaDataLen
+    );
+
+    if (wallet.publicKey) {
+      const instructionOne = SystemProgram.createAccount({
+        fromPubkey: wallet.publicKey,
+        newAccountPubkey: mintKeyPair.publicKey,
+        space: minLen,
+        lamports,
+        programId: TOKEN_2022_PROGRAM_ID,
+      });
+
+      const instructionTwo = createInitializeMetadataPointerInstruction(
+        mintKeyPair.publicKey,
+        wallet.publicKey,
+        mintKeyPair.publicKey,
+        TOKEN_2022_PROGRAM_ID
+      );
+
+      const instructionThree = createInitializeMintInstruction(
+        mintKeyPair.publicKey,
+        9,
+        wallet.publicKey,
+        null,
+        TOKEN_2022_PROGRAM_ID
+      );
+
+      const instructionFour = createInitializeInstruction({
+        programId: TOKEN_2022_PROGRAM_ID,
+        mint: mintKeyPair.publicKey,
+        metadata: mintKeyPair.publicKey,
+        name: metadata.name,
+        symbol: metadata.symbol,
+        uri: metadata.uri,
+        mintAuthority: wallet.publicKey,
+        updateAuthority: wallet.publicKey,
+      });
+
+      const transaction = await new Transaction().add(instructionOne, instructionTwo, instructionThree, instructionFour);
+      transaction.feePayer = wallet.publicKey;
+      transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+      await transaction.partialSign(mintKeyPair);
+
+      await wallet.sendTransaction(transaction, connection);
+
+      console.log(`Token mint created at ${mintKeyPair.publicKey.toBase58()}`);
+    }
   }
 
   return (
@@ -23,7 +117,9 @@ export default function TokenMainComponent() {
         <Button
           variant="link"
           onClick={() => setActiveTab("createToken")}
-          className={`flex gap-1 ${activeTab === "createToken" ? "underline" : ""}`}
+          className={`flex gap-1 ${
+            activeTab === "createToken" ? "underline" : ""
+          }`}
         >
           Create Token
         </Button>
@@ -31,7 +127,9 @@ export default function TokenMainComponent() {
         <Button
           variant="link"
           onClick={() => setActiveTab("userTokens")}
-          className={`flex gap-1 ${activeTab === "userTokens" ? "underline" : ""}`}
+          className={`flex gap-1 ${
+            activeTab === "userTokens" ? "underline" : ""
+          }`}
         >
           Your Tokens
         </Button>
@@ -39,7 +137,9 @@ export default function TokenMainComponent() {
         <Button
           variant="link"
           onClick={() => setActiveTab("tokenDetails")}
-          className={`flex gap-1 ${activeTab === "tokenDetails" ? "underline" : ""}`}
+          className={`flex gap-1 ${
+            activeTab === "tokenDetails" ? "underline" : ""
+          }`}
         >
           Token Details
         </Button>
@@ -48,7 +148,9 @@ export default function TokenMainComponent() {
       {activeTab === "createToken" && (
         <div className="flex flex-col gap-7 px-4">
           <div className="flex flex-col gap-1">
-            <h1 className="md:text-3xl text-2xl font-bold">Create a New Token</h1>
+            <h1 className="md:text-3xl text-2xl font-bold">
+              Create a New Token
+            </h1>
             <p className="text-xs dark:text-slate-500 text-gray-400">
               Fill in the details below to create your Solana token.
             </p>
@@ -82,10 +184,15 @@ export default function TokenMainComponent() {
               value={tokenSupply}
               onChange={(e) => setTokenSupply(e.target.value)}
             />
-            <Button className="mx-auto w-full" onClick={()=>{
-              console.log("Creating token");
-              createToken(tokenName, tokenSymbol, tokenImage, tokenSupply);
-            }}>Create Token</Button>
+            <Button
+              className="mx-auto w-full"
+              onClick={() => {
+                console.log("Creating token");
+                createToken(tokenName, tokenSymbol, tokenImage, tokenSupply);
+              }}
+            >
+              Create Token
+            </Button>
           </div>
         </div>
       )}
@@ -93,7 +200,9 @@ export default function TokenMainComponent() {
       {activeTab === "userTokens" && (
         <div className="flex flex-col gap-7 px-4">
           <div className="flex flex-col gap-1">
-            <h1 className="md:text-3xl text-2xl font-bold">View User&apos;s Solana Token</h1>
+            <h1 className="md:text-3xl text-2xl font-bold">
+              View User&apos;s Solana Token
+            </h1>
             <p className="text-xs dark:text-slate-500 text-gray-400">
               Enter the address to view token information.
             </p>
